@@ -1,0 +1,10 @@
+{
+    "1": {
+        "title": "document",
+        "variables": ["type1", "type2", "type3", "type4"]
+    },
+    "2": {
+        "title": "id",
+        "variables": ["id1"]
+    }
+}
