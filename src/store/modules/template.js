@@ -6,18 +6,60 @@ const state =
 {
     template: {
         item: {
-            data:{
+        },
+        items: {
+        },
+        result: {
 
-            }
         }
     }
 };
 
 const getters = {
-    getTemplate: state => state.template.item.data,
+    getTemplates: state => state.template.items,
+    getTemplate: state => state.template.item,
+    getResult: state => state.template.result
 };
 
 const actions = {
+    get({ commit }, {resource}) {
+        return new Promise((resolve, reject) => 
+        {
+            try {
+                let getPath = process.cwd() + "/src/templates/";
+                let getTemplates = fs.readdirSync(getPath);
+                commit('setItems', 
+                {
+                    resource: resource,
+                    result: getTemplates
+                })
+                resolve("test")
+            }catch(err){
+                console.log(err)
+                reject(err)
+            }
+        })
+    },
+    set({ commit }, {resource, data}){
+        return new Promise((resolve, reject) => 
+        {
+            try {
+                let getPath = process.cwd() + "/src/templates/";
+                let getTemplatePath = getPath + data;
+                let rawdata = fs.readFileSync(path.resolve(getTemplatePath + "/config.json"));
+                let getTemplate = JSON.parse(rawdata);
+                commit("setItem", 
+                {
+                    resource: resource,
+                    result: getTemplate
+                })
+                resolve(getTemplate)
+            }catch(err){
+                console.log(err)
+                reject(err)
+            }
+        })
+    },
     create({ commit }, {resource, data}){
         return new Promise((resolve, reject) => 
         {
@@ -47,13 +89,12 @@ const actions = {
                     fs.writeFile("E:/Programma's/Documents/A-factuur/template2.html", template, (error) => {
                         console.log(error)
                     });
-                    commit('addItem', 
+                    commit('setResult', 
                     {
                         resource: resource,
                         result: template
                     })
                     console.log("done")
-                    console.log(template)
                 });
                 console.log(data)
                 // ipcRenderer.send('test')
@@ -74,7 +115,7 @@ const actions = {
 }
 
 const mutations = {
-    ...globalMutations
+    ...globalMutations,
 }
 
 export default {

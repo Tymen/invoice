@@ -15,12 +15,14 @@ const routes = [
   {
     path: '/template/add',
     name: 'Add',
-    component: Add
+    component: Add,
+    meta: { transitionName: 'slide' },
   },
   {
     path: '/template/create',
     name: 'Create',
-    component: Create
+    component: Create,
+    meta: { transitionName: 'slide' },
   }
 ]
 

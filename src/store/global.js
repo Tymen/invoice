@@ -8,8 +8,14 @@ const globalActions = {
 }
 
 const globalMutations = {
-    addItem(state,payload) {
-        state[payload.resource].item = payload.result.data
+    setItem(state,payload) {
+        state[payload.resource].item = payload.result
+    },
+    setItems(state,payload) {
+        state[payload.resource].items = payload.result
+    },
+    setResult(state,payload) {
+        state[payload.resource].result = payload.result
     },
     updateItems(state, payload) {
         state[payload.resource].items = payload.result.data;
