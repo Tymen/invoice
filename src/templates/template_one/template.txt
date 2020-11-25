@@ -123,15 +123,15 @@
         <div class="main-client-info">
             <p class="uppercase">${type2} voor</p>
             <ul>
-                <li>Olbro</li>
-                <li>Adress</li>
-                <li>City, ST Biddinghuizen</li>
+                <li>${name}</li>
+                <li>${address}</li>
+                <li>${stad}, ${postcode}</li>
             </ul>
         </div>
         <div class="main-document-info">
             <div class="document-id">
                 <p class="uppercase">${type3} nummer</p>
-                <p>000${getId}</p>
+                <p>${id}</p>
             </div>
             <div class="document-created-date">
                 <p class="uppercase">${type4} Datum</p>
@@ -183,7 +183,7 @@
                 <tr>
                 <td></td>
                 <td></td>
-                <td>Totaal:</td>
+                <td>Totaal: </td>
                 </tr>
             </table>
         </div>

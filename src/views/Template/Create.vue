@@ -19,9 +19,54 @@
       </div>
       </v-col>
     </div>
-    <div v-else class="">
-    <v-btn v-on:click="test()">test</v-btn>
-    <v-btn to="/">home</v-btn>
+    <div v-else class="main-create-body">
+    <div class="form-main">
+      <v-row>
+        <v-col
+          cols="12"
+          md="4"
+          v-for="(item, itemId) in this.getTemplate" :key="itemId"
+        >
+          <v-text-field 
+            v-if="item.type === 'text'"
+            :label="item.title"
+            v-model="data[item.name]"
+            outlined
+            required
+          ></v-text-field>
+          <v-select
+            v-else-if="item.type === 'docType'"
+            :items="types"
+            :label="item.title"
+            outlined
+            v-model="data.type"
+          ></v-select>
+          <v-text-field 
+            v-if="item.type === 'identifier'"
+            :label="item.title"
+            v-model="data[item.name]"
+            outlined
+            required
+          ></v-text-field>
+          <div
+            v-if="item.type === 'total'"
+            class="display-none"
+          ></div>
+          <div 
+            v-if="item.type === 'tax'"
+            class="display-none"
+          ></div>
+          <v-text-field 
+            v-if="item.type === 'table'"
+            :label="item.title"
+            v-model="data[item.name]"
+            outlined
+            required
+          ></v-text-field>
+        </v-col>
+      </v-row>
+    </div>
+    <v-btn class="submit" v-on:click="test()">submit</v-btn>
     </div>
   </div>
 </template>
@@ -34,6 +79,10 @@ export default {
     return {
       show: true,
       template: '',
+      data: {
+        type: "Offerte",
+      },
+      types: ["Offerte", "Factuur"]
     }
   },
   computed: {
@@ -42,12 +91,18 @@ export default {
   methods: {
     ...mapActions(domain, ["create", "get", "set"]),
     test () {
-      this.create({resource: domain, data: "Test"})
+      this.create({resource: domain, data: this.data, selectedTemplate: this.template})
     },
     selectTemplate(){
       this.set({resource: domain, data: this.template})
+      for (var key of Object.keys(this.getTemplate)){
+        this.data[this.getTemplate[key].name] = "null"
+      }
       this.show = false;
-      console.log(this.template);
+      console.log(this.getTemplate);
+    },
+    go(val){
+      console.log(val);
     }
   },
   created() {
@@ -59,6 +114,18 @@ export default {
 }
 </script>
 <style scoped>
+  .submit {
+    background-color: #2B2B2B!important;
+    color: white!important;
+    border-radius: 10px!important;
+    width: 100%;
+    min-height: 35px!important;
+    margin: 10px;
+  }
+  .submit:hover {
+    border: solid 2px #2B2B2B!important;
+    background-color: #363636!important;
+  }
   .selector {
     display: flex;
     width: 100%;
@@ -95,5 +162,13 @@ export default {
   }
   .sub-selector {
     display: flex;
+  }
+  .main-create-body {
+    padding: 0 15%;
+  }
+  .form-main {
+  }
+  .display-none {
+    display: none;
   }
 </style>

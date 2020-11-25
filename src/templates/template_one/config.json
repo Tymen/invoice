@@ -1,10 +1,61 @@
 {
     "1": {
-        "title": "document",
+        "type": "docType",
+        "title": "Document type",
+        "name": "type",
         "variables": ["type1", "type2", "type3", "type4"]
     },
     "2": {
+        "type": "text",
+        "title": "name",
+        "name": "name",
+        "variables": ["name"]
+    },
+    "3": {
+        "type": "text",
+        "title": "Address",
+        "name": "address",
+        "variables": ["address"]
+    },
+    "4": {
+        "type": "text",
+        "title": "postcode",
+        "name": "postcode",
+        "variables": ["postcode"]
+    },
+    "5": {
+        "type": "text",
+        "title": "stad",
+        "name": "stad",
+        "variables": ["stad"]
+    },
+    "6": {
+        "type": "identifier",
         "title": "id",
-        "variables": ["id1"]
+        "name": "id",
+        "variables": ["id"]
+    },
+    "7": {
+        "type": "table",
+        "title": "table",
+        "name": "table",
+        "description": "name",
+        "amount": {
+            "type": "amount/hours",
+            "data": "amount"
+        },
+        "price": "price"
+    },
+    "8": {
+        "type": "total",
+        "title": "total",
+        "name": "postcode",
+        "variable": "name"
+    },
+    "9": {
+        "type": "tax",
+        "title": "Btw",
+        "name": "btw",
+        "variable": "name"
     }
 }

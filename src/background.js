@@ -5,11 +5,51 @@ import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 var path = require('path')
+const fs = require('fs')
+const utils = require('util')
+const hb = require('handlebars')
+const readFile = utils.promisify(fs.readFile)
+const puppeteer = require("puppeteer");
 require('dotenv').config()
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
+
+async function getTemplateHtml() {
+  console.log("Loading template file in memory")
+  try {
+  const invoicePath = path.resolve("E:/Programma's/Documents/A-factuur/template2.html");
+      return await readFile(invoicePath, 'utf8');
+  } catch (err) {
+      return Promise.reject("Could not load html template");
+  }
+}
+ipcMain.on('renderPDF', async () => {
+  let data = {};
+  getTemplateHtml().then(async (res) => {
+  // Now we have the html code of our template in res object
+  // you can check by logging it on console
+  // console.log(res)
+  console.log("Compiing the template with handlebars")
+  const template = hb.compile(res, { strict: true });
+  // we have compile our code with handlebars
+  const result = template(data);
+  // We can use this to add dyamic data to our handlebas template at run time from database or API as per need. you can read the official doc to learn more https://handlebarsjs.com/
+  const html = result;
+  // we are using headless mode
+  const browser = await puppeteer.launch({ executablePath: "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe" });
+  const page = await browser.newPage();
+  // We set the page content as the generated html by handlebars
+  await page.setContent(html)
+  // We use pdf function to generate the pdf in the same folder as this file.
+  await page.pdf({ path: "E:/Programma's/Documents/A-factuur/invoice.pdf", format: 'A4' })
+  await browser.close();
+      console.log("PDF Generated")
+  }).catch(err => {
+      console.error(err)
+  });
+})
 
 async function createWindow() {
   // Create the browser window.

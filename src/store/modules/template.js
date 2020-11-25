@@ -1,7 +1,9 @@
 import { globalMutations, globalActions } from '../global';
 const fs = require('fs')
 const path = require('path');
+const { ipcRenderer } = require('electron');
 require('dotenv').config()
+
 const state =
 {
     template: {
@@ -60,33 +62,28 @@ const actions = {
             }
         })
     },
-    create({ commit }, {resource, data}){
+    create({ commit }, {resource, data, selectedTemplate}){
         return new Promise((resolve, reject) => 
         {
             try {
                 let getPath = process.cwd() + "/src/templates/";
-                let getTemplates = fs.readdirSync(getPath);
-                let getTemplatePath = getPath + getTemplates[0];
+                let getTemplatePath = getPath + selectedTemplate;
                 let rawdata = fs.readFileSync(path.resolve(getTemplatePath + "/config.json"));
                 let getProperties = JSON.parse(rawdata);
                 let template = null;
-                let array = [];
-                fs.readFile(getTemplatePath + "/template.txt", 'utf8', function(err, data) {
+                fs.readFile(getTemplatePath + "/template.txt", 'utf8', async function(err, templateData) {
                     if (err) throw err;
-                    template = data
+                    template = templateData
                     for (var key of Object.keys(getProperties)) {
-                        array.push(getProperties[key].variables)
-                    }
-                    for(var i = 0; i < array.length; i++){
-                        console.log(array[i])
-                        if(array[i]){
-                            for(var x = 0; x < array[i].length; x++){
-                                template = template.replace("${" + array[i][x] + "}", "Offerte")
+                        if (getProperties[key].variables){
+                            for(var x = 0; x < getProperties[key].variables.length; x++){
+                                console.log(getProperties[key].variables[x]);
+                                template = template.replace("${" + getProperties[key].variables[x] + "}", data[getProperties[key]["name"]])
                             }
                         }
                     }
                     // let filePath = process.env.TEMPLATE_PATH;
-                    fs.writeFile("E:/Programma's/Documents/A-factuur/template2.html", template, (error) => {
+                    await fs.writeFile("E:/Programma's/Documents/A-factuur/template2.html", template, (error) => {
                         console.log(error)
                     });
                     commit('setResult', 
@@ -95,6 +92,7 @@ const actions = {
                         result: template
                     })
                     console.log("done")
+                    ipcRenderer.send("renderPDF")
                 });
                 console.log(data)
                 // ipcRenderer.send('test')
