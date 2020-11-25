@@ -2,7 +2,7 @@ import { globalMutations, globalActions } from '../global';
 const fs = require('fs')
 const path = require('path');
 const { ipcRenderer } = require('electron');
-require('dotenv').config()
+const env = require('dotenv').config().parsed
 
 const state =
 {
@@ -12,7 +12,6 @@ const state =
         items: {
         },
         result: {
-
         }
     }
 };
@@ -24,6 +23,7 @@ const getters = {
 };
 
 const actions = {
+    // returns a list of all the templates that are available
     get({ commit }, {resource}) {
         return new Promise((resolve, reject) => 
         {
@@ -42,6 +42,7 @@ const actions = {
             }
         })
     },
+    // sets the current template and loads the configuration.
     set({ commit }, {resource, data}){
         return new Promise((resolve, reject) => 
         {
@@ -62,6 +63,7 @@ const actions = {
             }
         })
     },
+    // creates a html document based on the data that is provided. Renders a PDF.
     create({ commit }, {resource, data, selectedTemplate}){
         return new Promise((resolve, reject) => 
         {
@@ -83,7 +85,8 @@ const actions = {
                         }
                     }
                     // let filePath = process.env.TEMPLATE_PATH;
-                    await fs.writeFile("E:/Programma's/Documents/A-factuur/template2.html", template, (error) => {
+                    console.log(env.PATH);
+                    await fs.writeFile(env.PATH + "/template2.html", template, (error) => {
                         console.log(error)
                     });
                     commit('setResult', 
@@ -95,13 +98,6 @@ const actions = {
                     ipcRenderer.send("renderPDF")
                 });
                 console.log(data)
-                // ipcRenderer.send('test')
-                // console.log(body)
-                // let filePath = process.env.TEMPLATE_PATH;
-                // fs.writeFile(filePath, body, (error) => {
-                //     console.log(error)
-                // });
-                // console.log("done")
                 resolve("yeey")
             }catch(err){
                 console.log(err)

@@ -3,63 +3,29 @@
 import { app, protocol, BrowserWindow, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
+import pdfEngine from './pdfRenderEngine'
+const env = require('dotenv').config().parsed
 const isDevelopment = process.env.NODE_ENV !== 'production'
-var path = require('path')
-const fs = require('fs')
-const utils = require('util')
-const hb = require('handlebars')
-const readFile = utils.promisify(fs.readFile)
-const puppeteer = require("puppeteer");
-require('dotenv').config()
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
 
-async function getTemplateHtml() {
-  console.log("Loading template file in memory")
-  try {
-  const invoicePath = path.resolve("E:/Programma's/Documents/A-factuur/template2.html");
-      return await readFile(invoicePath, 'utf8');
-  } catch (err) {
-      return Promise.reject("Could not load html template");
-  }
-}
 ipcMain.on('renderPDF', async () => {
-  let data = {};
-  getTemplateHtml().then(async (res) => {
-  // Now we have the html code of our template in res object
-  // you can check by logging it on console
-  // console.log(res)
-  console.log("Compiing the template with handlebars")
-  const template = hb.compile(res, { strict: true });
-  // we have compile our code with handlebars
-  const result = template(data);
-  // We can use this to add dyamic data to our handlebas template at run time from database or API as per need. you can read the official doc to learn more https://handlebarsjs.com/
-  const html = result;
-  // we are using headless mode
-  const browser = await puppeteer.launch({ executablePath: "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe" });
-  // const browser = await puppeteer.launch({ executablePath: "/Users/tymenvis/Documents/codeprojects/Pompeji_pdf_editor/node_modules/puppeteer/.local-chromium/mac-818858/chrome-mac/Chromium.app/Contents/MacOS/Chromium" });
-  const page = await browser.newPage();
-  // We set the page content as the generated html by handlebars
-  await page.setContent(html)
-  // We use pdf function to generate the pdf in the same folder as this file.
-  await page.pdf({ path: "E:/Programma's/Documents/A-factuur/invoice.pdf", format: 'A4' })
-  await browser.close();
-      console.log("PDF Generated")
-  }).catch(err => {
-      console.error(err)
-  });
+  let templatePath = env.PATH + "/template2.html";
+  pdfEngine.renderPDF(templatePath)
+
 })
 
 async function createWindow() {
-  // Create the browser window.
+
   const win = new BrowserWindow({
     width: 800,
     height: 600,
     minWidth: 900,
     minHeight: 800,
-    icon: path.join(__dirname, 'assets/Logo.png'),
+    // icon: path.join(__dirname, 'assets/Logo.png'),
     webPreferences: {
       // webSecurity: false,
       // Use pluginOptions.nodeIntegration, leave this alone
@@ -67,7 +33,9 @@ async function createWindow() {
       nodeIntegration: true
     }
   })
+
   win.removeMenu()
+
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
@@ -77,6 +45,7 @@ async function createWindow() {
     // Load the index.html when not in development
     win.loadURL('app://./index.html')
   }
+  
 }
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
