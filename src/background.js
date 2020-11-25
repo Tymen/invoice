@@ -39,6 +39,7 @@ ipcMain.on('renderPDF', async () => {
   const html = result;
   // we are using headless mode
   const browser = await puppeteer.launch({ executablePath: "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe" });
+  // const browser = await puppeteer.launch({ executablePath: "/Users/tymenvis/Documents/codeprojects/Pompeji_pdf_editor/node_modules/puppeteer/.local-chromium/mac-818858/chrome-mac/Chromium.app/Contents/MacOS/Chromium" });
   const page = await browser.newPage();
   // We set the page content as the generated html by handlebars
   await page.setContent(html)
