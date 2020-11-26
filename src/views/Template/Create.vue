@@ -65,6 +65,19 @@
           ></v-text-field>
         </v-col>
       </v-row>
+      <v-row>
+      <v-col
+          cols="12"
+          md="4"
+          v-for="(item, itemId) in this.tableData" :key="itemId"
+      >
+          <v-text-field 
+            :label="item"
+            outlined
+            required
+          ></v-text-field>
+      </v-col>
+      </v-row>
     </div>
     <v-btn class="submit" v-on:click="test()">submit</v-btn>
     </div>
@@ -79,6 +92,7 @@ export default {
     return {
       show: true,
       template: '',
+      tableData: {},
       data: {
         type: "Offerte",
       },
@@ -105,10 +119,15 @@ export default {
       console.log(val);
     }
   },
-  created() {
+  async created() {
     EventBus.$emit("routeChange", "Create")
-    this.get({resource: domain})
+    await this.get({resource: domain})
     this.template = this.getTemplates[0]
+    for (var key of Object.keys(this.getTemplate)){
+      if (this.getTemplate[key].type === "table") {
+        this.tableData = this.getTemplate[key].variables;
+      }
+    }
     console.log(this.getTemplates)
   }
 }

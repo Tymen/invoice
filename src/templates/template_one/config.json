@@ -39,12 +39,14 @@
         "type": "table",
         "title": "table",
         "name": "table",
-        "description": "name",
-        "amount": {
-            "type": "amount/hours",
-            "data": "amount"
-        },
-        "price": "price"
+        "variables": {
+            "description": "title",
+            "amount": {
+                "type": "amount/hours",
+                "data": "amount"
+            },
+            "price": "price"
+        }
     },
     "8": {
         "type": "total",

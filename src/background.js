@@ -3,7 +3,9 @@
 import { app, protocol, BrowserWindow, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
-import pdfEngine from './pdfRenderEngine'
+import pdfEngine from './Engines/pdfRenderEngine'
+import htmlEngine from './Engines/htmlRenderEngine'
+const fs = require('fs')
 const env = require('dotenv').config().parsed
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -12,10 +14,11 @@ protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
 
-ipcMain.on('renderPDF', async () => {
-  let templatePath = env.PATH + "/template2.html";
-  pdfEngine.renderPDF(templatePath)
-
+ipcMain.on('renderDocument', async (event, selectedTemplate, data) => {
+  await htmlEngine.renderHTML(selectedTemplate, data).then((res) => {
+    pdfEngine.renderPDF(res)
+  })
+  return "succes"
 })
 
 async function createWindow() {

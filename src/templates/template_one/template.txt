@@ -125,7 +125,7 @@
             <ul>
                 <li>${name}</li>
                 <li>${address}</li>
-                <li>${stad}, ${postcode}</li>
+                <li>${postcode} ${stad}</li>
             </ul>
         </div>
         <div class="main-document-info">
@@ -144,26 +144,6 @@
                 <th>Beschrijving</th>
                 <th>Aantal</th>
                 <th>Totaal</th>
-                </tr>
-                <tr>
-                <td>Schouw</td>
-                <td>1x</td>
-                <td>&euro; 5,-</td>
-                </tr>
-                <tr>
-                    <td>Schouw</td>
-                    <td>1x</td>
-                    <td>&euro; 5,-</td>
-                </tr>
-                <tr>
-                    <td>Schouw</td>
-                    <td>1x</td>
-                    <td>&euro; 5,-</td>
-                </tr>
-                <tr>
-                    <td>Schouw</td>
-                    <td>1x</td>
-                    <td>&euro; 5,-</td>
                 </tr>
                 ${table}
             </table>

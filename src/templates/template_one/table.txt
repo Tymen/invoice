@@ -1,0 +1,5 @@
+<tr>
+    <td>${row_title}</td>
+    <td>${row_amount}</td>
+    <td>&euro; ${row_price}</td>
+</tr>
