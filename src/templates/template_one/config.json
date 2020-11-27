@@ -41,10 +41,7 @@
         "name": "table",
         "variables": {
             "description": "title",
-            "amount": {
-                "type": "amount/hours",
-                "data": "amount"
-            },
+            "amount": "amount",
             "price": "price"
         }
     },

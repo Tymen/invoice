@@ -46,6 +46,7 @@ const actions = {
         return new Promise((resolve, reject) => 
         {
             try {
+                console.log(data);
                 let getPath = process.cwd() + "/src/templates/";
                 let getTemplatePath = getPath + data;
                 let rawdata = fs.readFileSync(path.resolve(getTemplatePath + "/config.json"));

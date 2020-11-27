@@ -65,16 +65,21 @@
           ></v-text-field>
         </v-col>
       </v-row>
-      <v-row>
+      <div>
+        <p>Add Items</p>
+        <v-btn class="add" v-on:click="addTableRow()">add</v-btn>
+      </div>
+      <v-row class="table-row" v-for="(item, itemId) in this.tableData" :key="itemId">
       <v-col
           cols="12"
           md="4"
-          v-for="(item, itemId) in this.tableData" :key="itemId"
+          v-for="(tableItem, tableId) in item" :key="tableId"
       >
           <v-text-field 
-            :label="item"
-            outlined
-            required
+          :label="tableId"
+          v-model="tableData[itemId][tableId]"
+          outlined
+          required
           ></v-text-field>
       </v-col>
       </v-row>
@@ -92,11 +97,10 @@ export default {
     return {
       show: true,
       template: '',
-      tableData: {},
-      data: {
-        type: "Offerte",
-      },
-      types: ["Offerte", "Factuur"]
+      tableData: [],
+      data: {},
+      types: ["Offerte", "Factuur"],
+      tabletKey: ""
     }
   },
   computed: {
@@ -104,35 +108,69 @@ export default {
   },
   methods: {
     ...mapActions(domain, ["create", "get", "set"]),
+    addTableRow() {
+      if (this.tableData.length > 1){
+        this.tableData.push(this.getTemplate[this.tabletKey].variables);
+      }else {
+        for (var key of Object.keys(this.getTemplate)){
+          if (this.getTemplate[key].type === "table") {
+            this.tableKey = key
+            this.tableData.push(this.getTemplate[key].variables);
+          }
+        }
+      }
+    },
     test () {
+      this.data["tableData"] = this.tableData;
       this.create({resource: domain, data: this.data, selectedTemplate: this.template})
     },
     selectTemplate(){
       this.set({resource: domain, data: this.template})
       for (var key of Object.keys(this.getTemplate)){
-        this.data[this.getTemplate[key].name] = "null"
+        this.data[this.getTemplate[key].name] = ""
       }
+      this.data.type = "Offerte"
       this.show = false;
       console.log(this.getTemplate);
     },
-    go(val){
-      console.log(val);
-    }
   },
   async created() {
     EventBus.$emit("routeChange", "Create")
     await this.get({resource: domain})
     this.template = this.getTemplates[0]
-    for (var key of Object.keys(this.getTemplate)){
-      if (this.getTemplate[key].type === "table") {
-        this.tableData = this.getTemplate[key].variables;
-      }
-    }
-    console.log(this.getTemplates)
+  },
+  mounted() {
+    this.tableData = [];
+    this.addTableRow();
   }
 }
+
+    // "7": {
+    //     "type": "table",
+    //     "title": "table",
+    //     "name": "table",
+    //     "variables": {
+    //         "description": "title",
+    //         "amount": {
+    //             "type": "hours",
+    //             "data": "amount"
+    //         },
+    //         "price": "price"
+    //     }
+    // },
+    // <v-text-field 
+    // v-if="tableId == 'amount'"
+    // :label="tableData[itemId][tableId]['type']"
+    // v-model="tableData[itemId][tableId]['data']"
+    // outlined
+    // required
+    // ></v-text-field>
 </script>
 <style scoped>
+  .table-row {
+    border-bottom: 2px solid #535353!important;
+    padding-top: 25px;
+  }
   .submit {
     background-color: #2B2B2B!important;
     color: white!important;
