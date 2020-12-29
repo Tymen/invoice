@@ -109,14 +109,10 @@ export default {
   methods: {
     ...mapActions(domain, ["create", "get", "set"]),
     addTableRow() {
-      if (this.tableData.length > 1){
-        this.tableData.push(this.getTemplate[this.tabletKey].variables);
-      }else {
-        for (var key of Object.keys(this.getTemplate)){
-          if (this.getTemplate[key].type === "table") {
-            this.tableKey = key
-            this.tableData.push(this.getTemplate[key].variables);
-          }
+      for (var key of Object.keys(this.getTemplate)){
+        if (this.getTemplate[key].type === "table") {
+          this.tableKey = key
+          this.tableData.push(this.getTemplate[key].variables);
         }
       }
     },
@@ -135,6 +131,7 @@ export default {
     },
   },
   async created() {
+    this.tableData = [];
     EventBus.$emit("routeChange", "Create")
     await this.get({resource: domain})
     this.template = this.getTemplates[0]
