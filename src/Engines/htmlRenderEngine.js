@@ -20,7 +20,9 @@ let setupTable = async (getTemplatePath, data, config) => {
 module.exports = {
     async renderHTML(selectedTemplate, data) {
         let templatePath = env.PATH + "/template2.html"
+
         try {
+
             let getPath = process.cwd() + "/src/templates/";
             let getTemplatePath = getPath + selectedTemplate;
             let rawdata = fs.readFileSync(path.resolve(getTemplatePath + "/config.json"));
@@ -38,9 +40,13 @@ module.exports = {
                 }
             }
             fs.writeFileSync(templatePath, template);
+
         }catch(err){
+
             throw err
+            
         }
+
         return templatePath;
     }
 }
