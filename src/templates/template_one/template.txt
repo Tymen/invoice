@@ -135,7 +135,7 @@
             </div>
             <div class="document-created-date">
                 <p class="uppercase">${type4} Datum</p>
-                <p>25-1-2020</p>
+                <p>${date}</p>
             </div>
         </div>
         <div class="document-table-products">
@@ -153,17 +153,17 @@
                 <tr>
                 <td></td>
                 <td></td>
-                <td>excl btw</td>
+                <td>excl btw: ${subtotal}</td>
                 </tr>
                 <tr>
                 <td></td>
                 <td></td>
-                <td>21% btw</td>
+                <td>21% btw: ${btw}</td>
                 </tr>
                 <tr>
                 <td></td>
                 <td></td>
-                <td>Totaal: </td>
+                <td>Totaal: ${total}</td>
                 </tr>
             </table>
         </div>

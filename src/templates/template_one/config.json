@@ -40,7 +40,7 @@
         "title": "table",
         "name": "table",
         "variables": {
-            "description": "title",
+            "title": "title",
             "amount": "amount",
             "price": "price"
         }
@@ -48,13 +48,19 @@
     "8": {
         "type": "total",
         "title": "total",
-        "name": "postcode",
-        "variable": "name"
+        "name": "total",
+        "variable": "total"
     },
     "9": {
         "type": "tax",
         "title": "Btw",
         "name": "btw",
         "variable": "name"
+    },
+    "10": {
+        "type": "date",
+        "title": "date",
+        "name": "current date",
+        "variable": "date"
     }
 }
