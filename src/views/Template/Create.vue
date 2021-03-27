@@ -41,13 +41,7 @@
             outlined
             v-model="data.type"
           ></v-select>
-          <v-text-field 
-            v-if="item.type === 'identifier'"
-            :label="item.title"
-            v-model="data[item.name]"
-            outlined
-            required
-          ></v-text-field>
+
           <div
             v-if="item.type === 'total'"
             class="display-none"

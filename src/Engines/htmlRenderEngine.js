@@ -23,8 +23,15 @@ let setupTable = async (getTemplatePath, data, config) => {
 
 module.exports = {
     async renderHTML(selectedTemplate, data) {
-        let templatePath = env.PATH + "/template2.html"
-
+        let files = fs.readdirSync(env.PATH + "/factuur");
+        let templatePath = env.PATH + "/template.html"
+        let id = 1;
+        if (!files.length < 0){
+            for (let p = 0; p < files.length; p++) {
+                id = files[p].substring(0, 5) - 0;
+            }
+        }
+        console.log("ID:" + id);
         let getPath = process.cwd() + "/src/templates/";
         let getTemplatePath = getPath + selectedTemplate;
         let rawdata = fs.readFileSync(path.resolve(getTemplatePath + "/config.json"));
@@ -35,6 +42,10 @@ module.exports = {
                 for(var x = 0; x < getProperties[key].variables.length; x++){
                     template = template.replace("${" + getProperties[key].variables[x] + "}", data[getProperties[key]["name"]])
                 }
+            }
+            if (getProperties[key].type === "identifier"){
+                console.log(getProperties[key].title);
+                template = template.replace("${" + getProperties[key].title + "}", id)
             }
             if(getProperties[key].type === "date"){
                 var today = new Date();
@@ -47,7 +58,7 @@ module.exports = {
                 template = template.replace("${subtotal}", `&euro; ${getTableData[1].toFixed(2)}`)
                 let getbtw = (getTableData[1] * 0.21).toFixed(2);
                 template = template.replace("${btw}", `&euro; ${getbtw}`)
-                template = template.replace("${total}", `&euro; ${(parseFloat(getTableData[1]) + parseFloat(getbtw).toFixed(2))}`)
+                template = template.replace("${total}", `&euro; ${(parseFloat(getTableData[1]) + parseFloat(getbtw)).toFixed(2)}`)
             }
         }
         fs.writeFileSync(templatePath, template);
