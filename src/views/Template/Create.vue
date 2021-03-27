@@ -69,7 +69,7 @@
         <p>Add Items</p>
         <v-btn class="add" v-on:click="addTableRow()">add</v-btn>
       </div>
-      <v-row class="table-row" v-for="(item, itemId) in this.tableData" :key="itemId">
+      <v-row class="table-row" v-for="(item, itemId) in this.tableData" :id="itemId" :key="itemId">
       <v-col
           cols="12"
           md="4"
@@ -77,7 +77,7 @@
       >
           <v-text-field 
           :label="tableId"
-          v-model="tableData[itemId][tableId]"
+          v-model="item[tableId]"
           outlined
           required
           ></v-text-field>
@@ -97,6 +97,7 @@ export default {
     return {
       show: true,
       template: '',
+      rows: 0,
       tableData: [],
       data: {},
       types: ["Offerte", "Factuur"],
@@ -112,7 +113,11 @@ export default {
       for (var key of Object.keys(this.getTemplate)){
         if (this.getTemplate[key].type === "table") {
           this.tableKey = key
-          this.tableData.push(this.getTemplate[key].variables);
+          this.tableData.push({})
+          let data = this.tableData[this.tableData.length -1]
+          for (var i of Object.keys(this.getTemplate[key].variables)){
+            data[this.getTemplate[key].variables[i]] = this.getTemplate[key].variables[i];
+          }
         }
       }
     },
