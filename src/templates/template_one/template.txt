@@ -87,7 +87,8 @@
         }
         td {
             border-bottom: 1px solid black;
-            padding: 5px;
+            padding: 2px;
+            max-width: 200px;
         }
         .document-table-total {
             border-top: solid 2px black;
