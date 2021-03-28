@@ -26,12 +26,12 @@ module.exports = {
         let files = fs.readdirSync(env.PATH + "/factuur");
         let templatePath = env.PATH + "/template.html"
         let id = 1;
-        if (!files.length < 0){
+        if (files.length > 0){
             for (let p = 0; p < files.length; p++) {
-                id = files[p].substring(0, 5) - 0;
+                id = (files[p].substring(0, 5) - 0) + 1;
+                console.log(files[p].substring(0, 5))
             }
         }
-        console.log("ID:" + id);
         let getPath = process.cwd() + "/src/templates/";
         let getTemplatePath = getPath + selectedTemplate;
         let rawdata = fs.readFileSync(path.resolve(getTemplatePath + "/config.json"));
@@ -44,7 +44,6 @@ module.exports = {
                 }
             }
             if (getProperties[key].type === "identifier"){
-                console.log(getProperties[key].title);
                 template = template.replace("${" + getProperties[key].title + "}", id)
             }
             if(getProperties[key].type === "date"){

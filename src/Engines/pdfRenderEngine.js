@@ -24,20 +24,20 @@ module.exports = {
     async renderPDF (templatePath) {
         try {
             let data = {};
-            let files = fs.readdirSync(env.PATH + "/factuur");
-            let id = 1;
-            let stringId = "00001";
-            if (!files.length < 0){
-                for (let p = 0; p < files.length; p++) {
-                    id = toString(files[p].substring(0, 5) - 0);
+            getTemplateHtml(templatePath).then(async (res) => {
+                let files = fs.readdirSync(env.PATH + "/factuur");
+                let id = "1";
+                let stringId = "";
+                if (files.length > 0){
+                    for (let p = 0; p < files.length; p++) {
+                        id = (files[p].substring(0, 5) - 0) + 1;
+                    }
                 }
-                for (let i = 0; i < (5 - id.length) ; i++) {
+                for (let i = 0; i < (5 - (id.toString()).length); i++) {
                     stringId = stringId + "0";
                 }
-            }
-            getTemplateHtml(templatePath).then(async (res) => {
-
-                console.log("Compiling the template")
+                console.log(id);
+                console.log("Generating the template")
                 const template = hb.compile(res, { strict: true });
                 const result = template(data);
                 const html = result;
@@ -45,7 +45,7 @@ module.exports = {
                 const page = await browser.newPage();
                 
                 await page.setContent(html)
-                await page.pdf({ path: env.PATH + `/factuur/${stringId + id}.pdf`, format: 'A4' })
+                await page.pdf({ path: env.PATH + `/factuur/${stringId + id}-Factuur.pdf`, format: 'A4' })
                 await browser.close();
                     console.log("PDF Generated")
                 }).catch(err => {

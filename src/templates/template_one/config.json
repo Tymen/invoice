@@ -33,7 +33,7 @@
         "type": "identifier",
         "title": "id",
         "name": "id",
-        "variables": ["id"]
+        "variable": "id"
     },
     "7": {
         "type": "table",
