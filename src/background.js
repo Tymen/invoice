@@ -1,10 +1,11 @@
 'use strict'
 
-import { app, protocol, BrowserWindow, ipcMain } from 'electron'
+import { app, protocol, BrowserWindow, ipcMain, dialog } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import pdfEngine from './Engines/pdfRenderEngine'
 import htmlEngine from './Engines/htmlRenderEngine'
+var path = require('path')
 const fs = require('fs')
 const env = require('dotenv').config().parsed
 const isDevelopment = process.env.NODE_ENV !== 'production'
@@ -20,15 +21,37 @@ ipcMain.on('renderDocument', async (event, selectedTemplate, data) => {
   })
   return "succes"
 })
+ipcMain.on('selectFolder', async () => {
+  return await dialog.showOpenDialog({ properties: ['openDirectory'] }).then(result => {
+    let rawdata = fs.readFileSync("./appSettings.json");
+    let PATH = JSON.parse(rawdata);
+    PATH.path = result.filePaths[0].replace(/\\/g, "/");
+    fs.writeFileSync('./appSettings.json', JSON.stringify(PATH))
+    return result.filePaths
+  }).catch(err => {
+    return err;
+  })
+})
+ipcMain.on('selectChrome', async () => {
+  return await dialog.showOpenDialog({ properties: ['openFile'] }).then(result => {
+    let rawdata = fs.readFileSync("./appSettings.json");
+    let PATH = JSON.parse(rawdata);
+    PATH.chrome = result.filePaths[0].replace(/\\/g, "/"),
+    fs.writeFileSync('./appSettings.json', JSON.stringify(PATH))
+    return result.filePaths
+  }).catch(err => {
+    return err;
+  })
+})
 
 async function createWindow() {
 
   const win = new BrowserWindow({
-    width: 800,
+    width: 1200,
     height: 600,
     minWidth: 900,
     minHeight: 800,
-    // icon: path.join(__dirname, 'assets/Logo.png'),
+    //icon: path.join(__dirname, 'assets/Logo.png'),
     webPreferences: {
       // webSecurity: false,
       // Use pluginOptions.nodeIntegration, leave this alone

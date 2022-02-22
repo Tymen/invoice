@@ -27,7 +27,7 @@ const actions = {
         return new Promise((resolve, reject) => 
         {
             try {
-                let getPath = process.cwd() + "/src/templates/";
+                let getPath = process.cwd() + "/templates/";
                 let getTemplates = fs.readdirSync(getPath);
                 commit('setItems', 
                 {
@@ -47,7 +47,7 @@ const actions = {
         {
             try {
                 console.log(data);
-                let getPath = process.cwd() + "/src/templates/";
+                let getPath = process.cwd() + "/templates/";
                 let getTemplatePath = getPath + data;
                 let rawdata = fs.readFileSync(path.resolve(getTemplatePath + "/config.json"));
                 let getTemplate = JSON.parse(rawdata);

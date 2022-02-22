@@ -7,15 +7,15 @@
     },
     "2": {
         "type": "text",
-        "title": "name",
-        "name": "name",
-        "variables": ["name"]
+        "title": "naam",
+        "name": "naam",
+        "variables": ["naam"]
     },
     "3": {
         "type": "text",
-        "title": "Address",
-        "name": "address",
-        "variables": ["address"]
+        "title": "adres",
+        "name": "adres",
+        "variables": ["adres"]
     },
     "4": {
         "type": "text",

@@ -20,6 +20,13 @@
       </v-col>
     </div>
     <div v-else class="main-create-body">
+    <v-alert
+      type="error"
+      :value="alert"
+      transition="scale-transition"
+    >
+      table needs to contain numbers
+    </v-alert>
     <div class="form-main">
       <v-row>
         <v-col
@@ -33,6 +40,7 @@
             v-model="data[item.name]"
             outlined
             required
+            class="white--text"
           ></v-text-field>
           <v-select
             v-else-if="item.type === 'docType'"
@@ -40,6 +48,7 @@
             :label="item.title"
             outlined
             v-model="data.type"
+            class="white--text"
           ></v-select>
 
           <div
@@ -50,18 +59,11 @@
             v-if="item.type === 'tax'"
             class="display-none"
           ></div>
-          <v-text-field 
-            v-if="item.type === 'table'"
-            :label="item.title"
-            v-model="data[item.name]"
-            outlined
-            required
-          ></v-text-field>
         </v-col>
       </v-row>
       <div>
-        <p>Add Items</p>
-        <v-btn class="add" v-on:click="addTableRow()">add</v-btn>
+        <v-btn class="add" v-on:click="addTableRow()">Add Item</v-btn>
+        <v-btn class="add" v-on:click="removeTableRow()">Remove Last Item</v-btn>
       </div>
       <v-row class="table-row" v-for="(item, itemId) in this.tableData" :id="itemId" :key="itemId">
       <v-col
@@ -74,11 +76,12 @@
           v-model="item[tableId]"
           outlined
           required
+          class="white--text"
           ></v-text-field>
       </v-col>
       </v-row>
     </div>
-    <v-btn class="submit" v-on:click="test()">submit</v-btn>
+    <v-btn class="submit" v-on:click="submit()">create document</v-btn>
     </div>
   </div>
 </template>
@@ -92,6 +95,7 @@ export default {
       show: true,
       template: '',
       rows: 0,
+      alert: false,
       tableData: [],
       data: {},
       types: ["Offerte", "Factuur"],
@@ -110,14 +114,31 @@ export default {
           this.tableData.push({})
           let data = this.tableData[this.tableData.length -1]
           for (var i of Object.keys(this.getTemplate[key].variables)){
-            data[this.getTemplate[key].variables[i]] = this.getTemplate[key].variables[i];
+            data[this.getTemplate[key].variables[i]] = "";
           }
         }
       }
     },
-    test () {
-      this.data["tableData"] = this.tableData;
-      this.create({resource: domain, data: this.data, selectedTemplate: this.template})
+    removeTableRow() {
+      this.tableData.pop()
+    },
+    isNumeric(num){
+      return !isNaN(num)
+    },
+    async submit () {
+      let valid = true;
+      for(let i=0; i < this.tableData.length; i++){
+        if(!this.isNumeric(this.tableData[i].price)){
+          this.alert = true;
+          valid = false
+        }
+      }
+      if (valid){
+        this.alert = false
+        this.data["tableData"] = this.tableData;
+        await this.create({resource: domain, data: this.data, selectedTemplate: this.template})
+        this.$router.push('/')
+      }
     },
     selectTemplate(){
       this.set({resource: domain, data: this.template})
@@ -163,21 +184,22 @@ export default {
     // ></v-text-field>
 </script>
 <style scoped>
-  .table-row {
-    border-bottom: 2px solid #535353!important;
-    padding-top: 25px;
-  }
+.add {
+  margin: 5px;
+}
   .submit {
-    background-color: #2B2B2B!important;
-    color: white!important;
+    background-color: rgba(255, 255, 255, 0.75)!important;
+    color: rgb(0, 0, 0)!important;
     border-radius: 10px!important;
     width: 100%;
+    padding: 30px!important;
     min-height: 35px!important;
     margin: 10px;
+    transition: .2s;
   }
   .submit:hover {
-    border: solid 2px #2B2B2B!important;
-    background-color: #363636!important;
+    background-color: #ffffff!important;
+    color: black !important;
   }
   .selector {
     display: flex;
@@ -197,11 +219,12 @@ export default {
   .submit-template {
     height: 56px!important;
     margin-left: 10px;
-    background-color: #2B2B2B!important;
-    color: white!important;
+    background-color: #c5c5c5!important;
+    transition: .2s;
+    color: rgb(0, 0, 0)!important;
   }
   .submit-template:hover {
-    background-color: #363636!important;
+    background-color: #ffffff!important;
   }
   .select-title {
     width: 100%;
@@ -218,8 +241,6 @@ export default {
   }
   .main-create-body {
     padding: 0 15%;
-  }
-  .form-main {
   }
   .display-none {
     display: none;

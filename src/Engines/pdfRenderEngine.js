@@ -5,7 +5,8 @@ const hb = require('handlebars')
 const readFile = utils.promisify(fs.readFile)
 const puppeteer = require("puppeteer");
 const env = require('dotenv').config().parsed
-
+let rawdata = fs.readFileSync("./appSettings.json");
+let PATH = JSON.parse(rawdata);
 async function getTemplateHtml(templatePath) {
 
     console.log("Loading template file in memory")
@@ -21,12 +22,12 @@ async function getTemplateHtml(templatePath) {
 
 module.exports = {
 
-    async renderPDF (templatePath) {
+    async renderPDF (templateData) {
         try {
             let data = {};
-            getTemplateHtml(templatePath).then(async (res) => {
-                let files = fs.readdirSync(env.PATH + "/factuur");
-                let id = "1";
+            getTemplateHtml(templateData[0]).then(async (res) => {
+                let files = fs.readdirSync(PATH.path);
+                let id = 1;
                 let stringId = "";
                 if (files.length > 0){
                     for (let p = 0; p < files.length; p++) {
@@ -36,16 +37,15 @@ module.exports = {
                 for (let i = 0; i < (5 - (id.toString()).length); i++) {
                     stringId = stringId + "0";
                 }
-                console.log(id);
                 console.log("Generating the template")
                 const template = hb.compile(res, { strict: true });
                 const result = template(data);
                 const html = result;
-                const browser = await puppeteer.launch({ executablePath: env.CHROME_PATH });
+                const browser = await puppeteer.launch({ executablePath: PATH.chrome });
                 const page = await browser.newPage();
                 
                 await page.setContent(html)
-                await page.pdf({ path: env.PATH + `/factuur/${stringId + id}-Factuur.pdf`, format: 'A4' })
+                await page.pdf({ path: PATH.path + `/${stringId + id}-${templateData[1]}.pdf`, format: 'A4' })
                 await browser.close();
                     console.log("PDF Generated")
                 }).catch(err => {

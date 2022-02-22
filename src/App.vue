@@ -126,6 +126,28 @@ export default {
 };
 </script>
 <style>
+  .theme--light.v-select .v-select__selection--comma {
+    color: white!important;
+  }
+  .theme--light.v-text-field--outlined:not(.v-input--is-focused):not(.v-input--has-state) > .v-input__control > .v-input__slot fieldset {
+    color: rgba(255, 255, 255, 0.42)!important;
+  }
+  .theme--light.v-text-field--outlined:not(.v-input--is-focused):not(.v-input--has-state) > .v-input__control > .v-input__slot fieldset:hover {
+    color: rgba(255, 255, 255, 0.918)!important;
+  }
+  .theme--light.v-label {
+    color: rgba(255, 255, 255, 0.21)!important;
+  }
+  .theme--light.v-input input, .theme--light.v-input textarea {
+    color: rgba(255, 255, 255, 0.75)!important;
+  }
+  .table-row .textfield {
+    border-bottom: 2px solid #535353!important;
+    padding-top: 25px;
+  }
+  .theme--light.v-input input{
+    color: rgba(255, 255, 255, 0.75)!important;
+  }
 .slide-left-enter-active,
 .slide-left-leave-active,
 .slide-right-enter-active,
@@ -141,7 +163,6 @@ export default {
   opacity: 0;
   transform: translate(2em, 0);
 }
-
 .slide-left-leave-active,
 .slide-right-enter {
   opacity: 0;

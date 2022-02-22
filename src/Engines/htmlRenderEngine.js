@@ -1,6 +1,8 @@
 const env = require('dotenv').config().parsed
 const fs = require('fs')
 var path = require('path')
+let rawdata = fs.readFileSync("./appSettings.json");
+let PATH = JSON.parse(rawdata);
 
 let setupTable = async (getTemplatePath, data, config) => {
     let getTableConfig = fs.readFileSync(getTemplatePath + "/table.txt", 'utf8')
@@ -15,7 +17,11 @@ let setupTable = async (getTemplatePath, data, config) => {
                 total = total + parseFloat(data.tableData[key][itemKey].replace(/,/g, '.'))
            }
         }
-        tableData[0] = tableData[0] + cache;
+        if (tableData[0]){
+            tableData[0] = tableData[0] + cache;
+        }else {
+            tableData[0] = cache;
+        }
     }
     tableData[1] = total;
     return tableData
@@ -23,20 +29,20 @@ let setupTable = async (getTemplatePath, data, config) => {
 
 module.exports = {
     async renderHTML(selectedTemplate, data) {
-        let files = fs.readdirSync(env.PATH + "/factuur");
-        let templatePath = env.PATH + "/template.html"
+        let files = fs.readdirSync(PATH.path);
+        let templatePath = "./template.html"
         let id = 1;
         if (files.length > 0){
             for (let p = 0; p < files.length; p++) {
                 id = (files[p].substring(0, 5) - 0) + 1;
-                console.log(files[p].substring(0, 5))
             }
         }
-        let getPath = process.cwd() + "/src/templates/";
+        let getPath = process.cwd() + "/templates/";
         let getTemplatePath = getPath + selectedTemplate;
         let rawdata = fs.readFileSync(path.resolve(getTemplatePath + "/config.json"));
         let getProperties = JSON.parse(rawdata);
         let template = fs.readFileSync(getTemplatePath + "/template.txt", 'utf8')
+        let response = [templatePath];
         for (var key of Object.keys(getProperties)) {
             if (getProperties[key].variables){
                 for(var x = 0; x < getProperties[key].variables.length; x++){
@@ -45,6 +51,9 @@ module.exports = {
             }
             if (getProperties[key].type === "identifier"){
                 template = template.replace("${" + getProperties[key].title + "}", id)
+            }
+            if (getProperties[key].title === "naam"){
+                response.push(data[getProperties[key]["name"]]);
             }
             if(getProperties[key].type === "date"){
                 var today = new Date();
@@ -62,6 +71,6 @@ module.exports = {
         }
         fs.writeFileSync(templatePath, template);
 
-        return templatePath;
+        return response;
     }
 }

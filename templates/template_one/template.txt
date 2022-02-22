@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self';" />
+    <title>Document</title>
+</head>
+<body>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            top: 0;
+        }
+        .template-main {
+            max-width: 800px;
+            margin: auto;
+            padding: 40px;
+            font-size: 13px;
+            line-height: 24px;
+            font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+            color: #555;
+        }
+        .document-title {
+            margin-bottom: 15px;
+        }
+        .uppercase {
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+        .main-company-info, .main-document-info {
+            display: flex;
+        }
+        .main-company-info {
+            padding: 30px 0px;
+        }
+        .main-company-info {
+            border-bottom: 3px solid black;
+        }
+        .main-client-info {
+            padding-top: 30px 
+        }
+        ul {
+            list-style: none;
+        }
+        .company-info {
+            width: 100%;
+        }
+        .logo {
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+            align-content: center;
+        }
+        .main-document-info {
+            padding: 30px 0;
+            justify-content: space-between;
+        }
+        .main-document-info > .document-id, 
+        .main-document-info > .document-created-date{
+            border-top: 1px solid black;
+            border-bottom: 1px solid black;
+            width: 230px;
+            padding: 10px 0;
+        }
+        /*Table styling */
+        .document-table-products {
+            width: 100%;
+            padding: 30px 0;
+        }
+        table { 
+            width: 100%;
+            border-collapse: collapse; 
+        }
+        .document-table-products .main-row {
+            border-top: 2px solid black;
+            border-bottom: 2px solid black;
+        }
+        .document-table-products tr:last-child {
+            border-bottom: 2px solid black;
+        }
+        th {
+            text-align: left;
+            padding: 5px;
+        }
+        td {
+            border-bottom: 1px solid black;
+            padding: 2px;
+            max-width: 200px;
+        }
+        .document-table-total {
+            border-top: solid 2px black;
+        }
+        .document-table-total td{
+            width: 100%;
+        }
+        .document-table-total tr td:last-child {
+            min-width: 150px;
+        }
+        .footer {
+            padding: 50px;
+            text-align: center;
+        }
+    </style>
+    <div class="template-main">
+        <div class="main-company-info">
+            <div class="company-info">
+                <h1 class="document-title">${type1}</h1>
+                <ul>
+                    <li>POMPEJI C.V</li>
+                    <li>NOORDERBAAN 13</li>
+                    <li>BIDDINGHUIZEN, 8256 PP</li>
+                    <li>IBAN : NL 58 INGB 0677398476</li>
+                    <li>WEBSITE: WWW.POMPEJI.NL</li>
+                    <li>TEL: 06 51404683</li>
+                </ul>
+            </div>
+            <div class="logo">
+                <img src="https://image.jimcdn.com/app/cms/image/transf/none/path/s13a4a4a75e0c3403/image/id4ccfcefec070126/version/1458391753/image.png">
+            </div>
+        </div>
+        <div class="main-client-info">
+            <p class="uppercase">${type2} voor</p>
+            <ul>
+                <li>${naam}</li>
+                <li>${adres}</li>
+                <li>${postcode} ${stad}</li>
+            </ul>
+        </div>
+        <div class="main-document-info">
+            <div class="document-id">
+                <p class="uppercase">${type3} nummer</p>
+                <p>${id}</p>
+            </div>
+            <div class="document-created-date">
+                <p class="uppercase">${type4} Datum</p>
+                <p>${date}</p>
+            </div>
+        </div>
+        <div class="document-table-products">
+            <table>
+                <tr class="main-row">
+                <th>Beschrijving</th>
+                <th>Aantal</th>
+                <th>Totaal</th>
+                </tr>
+                ${table}
+            </table>
+        </div>
+        <div class="document-table-total">
+            <table>
+                <tr>
+                <td></td>
+                <td></td>
+                <td>excl btw: ${subtotal}</td>
+                </tr>
+                <tr>
+                <td></td>
+                <td></td>
+                <td>21% btw: ${btw}</td>
+                </tr>
+                <tr>
+                <td></td>
+                <td></td>
+                <td>Totaal: ${total}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="footer">
+            <p class="uppercase">Pompeji C.V</p>
+        </div>
+    </div>
+</body>
+</html>
